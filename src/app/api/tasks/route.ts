@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
       taskData.recurrenceType = recurrenceType
       
       if (recurrenceType === 'WEEKLY' && recurrenceDays) {
-        taskData.recurrenceDays = JSON.stringify(recurrenceDays)
+        taskData.recurrenceDays = recurrenceDays
       }
     }
 

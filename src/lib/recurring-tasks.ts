@@ -102,7 +102,7 @@ export class RecurringTaskService {
     }
     
     if (task.recurrenceType === 'WEEKLY' && task.recurrenceDays) {
-      const recurrenceDays = JSON.parse(task.recurrenceDays) as number[]
+      const recurrenceDays = task.recurrenceDays as number[]
       return recurrenceDays.includes(dayOfWeek)
     }
     
@@ -139,7 +139,7 @@ export class RecurringTaskService {
         priority: updateData.priority as any,
         categoryId: updateData.categoryId,
         recurrenceType: updateData.recurrenceType as any,
-        recurrenceDays: updateData.recurrenceDays ? JSON.stringify(updateData.recurrenceDays) : undefined
+        recurrenceDays: updateData.recurrenceDays ? updateData.recurrenceDays : undefined
       }
     })
     
