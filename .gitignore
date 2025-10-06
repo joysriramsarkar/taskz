@@ -1,0 +1,24 @@
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# Next.js build output
+/.next/
+/out/
+
+# Custom server build output
+/dist/
+
+# Production
+/build/
+
+# Local development files
+/dev.db
+/dev.db-journal
+*.log
+.env
+.env*.local
+
+# IDE configuration
+.vscode/
