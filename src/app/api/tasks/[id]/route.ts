@@ -100,30 +100,41 @@ export async function DELETE(
 ) {
   try {
     const currentTask = await db.task.findUnique({
-      where: { id: params.id }
-    })
+      where: { id: params.id },
+    });
 
     if (!currentTask) {
-      return NextResponse.json({ error: 'Task not found' }, { status: 404 })
+      return NextResponse.json({ error: 'Task not found' }, { status: 404 });
     }
 
-    // Create history record before deletion
-    await db.taskHistory.create({
-      data: {
-        taskId: currentTask.id,
-        action: 'DELETED',
-        oldStatus: currentTask.status,
-        description: 'টাস্ক মুছে ফেলা হয়েছে'
+    await db.$transaction(async (prisma) => {
+      // If it's a recurring parent task, delete its child instances first.
+      if (currentTask.isRecurring) {
+        await prisma.task.deleteMany({
+          where: { parentTaskId: params.id },
+        });
       }
-    })
 
-    await db.task.delete({
-      where: { id: params.id }
-    })
+      // Create a history record for the main task's deletion.
+      // This record will be deleted along with the task due to the cascade.
+      await prisma.taskHistory.create({
+        data: {
+          taskId: currentTask.id,
+          action: 'DELETED',
+          oldStatus: currentTask.status,
+          description: 'টাস্ক মুছে ফেলা হয়েছে',
+        },
+      });
 
-    return NextResponse.json({ message: 'Task deleted successfully' })
+      // Finally, delete the main task itself.
+      await prisma.task.delete({
+        where: { id: params.id },
+      });
+    });
+
+    return NextResponse.json({ message: 'Task deleted successfully' });
   } catch (error) {
-    console.error('Error deleting task:', error)
-    return NextResponse.json({ error: 'Failed to delete task' }, { status: 500 })
+    console.error('Error deleting task:', error);
+    return NextResponse.json({ error: 'Failed to delete task' }, { status: 500 });
   }
 }
