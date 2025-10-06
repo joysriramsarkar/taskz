@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "nodemon",
-    "dev:log": "nodemon 2>&1 | tee dev.log",
+    "dev": "next dev",
+    "dev:custom": "nodemon",
     "build:server": "tsc --project tsconfig.server.json",
     "build": "npm run build:server && cross-env NODE_ENV=production dotenv -e .env.local -- next build",
     "start": "cross-env NODE_ENV=production node dist/server.js",
