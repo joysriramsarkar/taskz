@@ -1,8 +1,12 @@
-// server.ts - Next.js Standalone + Socket.IO
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import next from 'next';
 import * as path from 'path';
+import * as dotenv from 'dotenv';
+
+// Load environment variables from .env files
+dotenv.config({ path: path.resolve(__dirname, '.env.local') });
+dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 const dev = process.env.NODE_ENV !== 'production';
 const currentPort = parseInt(process.env.PORT || '3000', 10);
